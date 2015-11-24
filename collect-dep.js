@@ -20,7 +20,8 @@ function plugin () {
     CallExpression: function (path, state) {
       var
         node = path.node,
-        opts = state.opts
+        opts = state.opts,
+        args
       ;
 
       if (path.scope.hasBinding(opts.word, true)) {
@@ -32,9 +33,10 @@ function plugin () {
         return;
       }
 
-      if (node.arguments.length) {
-        if (node.arguments[0].type === "StringLiteral") {
-          opts.dep("strings", node.arguments[0].value);
+      args = node.arguments;
+      if (args.length) {
+        if (args[0].type === "StringLiteral") {
+          opts.dep("strings", args[0].value);
         }
         else {
           opts.dep("expressions", path.get("arguments.0").getSource())
