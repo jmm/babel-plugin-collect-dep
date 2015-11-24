@@ -1,6 +1,3 @@
-var
-  generate = require("babel-generator").default;
-
 exports = module.exports = plugin;
 
 exports.default_word = "require";
@@ -26,10 +23,12 @@ function plugin () {
         opts = state.opts
       ;
 
-      if (
-        ! opts.isRequire(node) ||
-        path.scope.hasBinding(opts.word, true)
-      ) {
+      if (path.scope.hasBinding(opts.word, true)) {
+        path.stop();
+        return;
+      }
+
+      if (! opts.isRequire(node)) {
         return;
       }
 
@@ -38,7 +37,7 @@ function plugin () {
           opts.dep("strings", node.arguments[0].value);
         }
         else {
-          opts.dep("expressions", generate(node.arguments[0]).code);
+          opts.dep("expressions", path.get("arguments.0").getSource())
         }
       }
       if (opts.nodes) opts.dep("nodes", node);

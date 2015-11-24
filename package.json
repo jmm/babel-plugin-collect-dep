@@ -2,8 +2,5 @@
   "private": true,
   "name": "babel-plugin-collect-dep",
   "version": "0.0.0",
-  "main": "collect-dep.js",
-  "dependencies": {
-    "babel-generator": "^6.0.0"
-  }
+  "main": "collect-dep.js"
 }
