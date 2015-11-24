@@ -4,6 +4,6 @@
   "version": "0.0.0",
   "main": "collect-dep.js",
   "dependencies": {
-    "babel-core": "^5.0.0"
+    "babel-generator": "^6.0.0"
   }
 }

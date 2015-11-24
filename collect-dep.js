@@ -1,9 +1,9 @@
 var
-  babel = require("babel-core");
+  generate = require("babel-generator").default;
 
 exports = module.exports = plugin;
 
-exports.default_word = 'require';
+exports.default_word = "require";
 
 exports.default_deps = function (opts) {
   opts = opts || {};
@@ -18,46 +18,48 @@ exports.default_deps = function (opts) {
   return deps;
 };
 
-function plugin (b, opts) {
-  opts = opts || {};
-  var word = opts.word === undefined ? exports.default_word : opts.word;
+function plugin () {
+  var visitor = {
+    CallExpression: function (path, state) {
+      var
+        node = path.node,
+        opts = state.opts
+      ;
 
-  var deps = opts.deps || exports.default_deps({nodes: opts.nodes});
-
-  var isRequire = opts.isRequire || function (node) {
-    return node.callee.type === 'Identifier' && node.callee.name === word;
-  };
-
-  var visitors = {
-    CallExpression: function (node, parent, scope, state) {
       if (
-        ! isRequire(node) ||
-        scope.hasBinding(word, true)
+        ! opts.isRequire(node) ||
+        path.scope.hasBinding(opts.word, true)
       ) {
         return;
       }
 
       if (node.arguments.length) {
-        if (node.arguments[0].type === 'Literal') {
-          deps.strings.push(node.arguments[0].value);
+        if (node.arguments[0].type === "StringLiteral") {
+          opts.dep("strings", node.arguments[0].value);
         }
         else {
-          // JMMDEBUG
-          // deps.expressions.push(escodegen.generate(node.arguments[0]));
+          opts.dep("expressions", generate(node.arguments[0]).code);
         }
       }
-      if (opts.nodes) deps.nodes.push(node);
+      if (opts.nodes) opts.dep("nodes", node);
     },
     // CallExpression
   };
 
-  return new b.Plugin('collect-dep', {visitor: visitors});
-};
-// plugin
+  return {
+    pre: function () {
+      opts = this.opts;
 
-module.exports.make = function (opts) {
-  return function (babel) {
-    return plugin.call(this, babel, opts);
+      if (! opts.word) opts.word = exports.default_word;
+
+      if (! opts.isRequire) opts.isRequire = function (node) {
+        return node.callee.type === "Identifier" && node.callee.name === opts.word;
+      };
+    },
+    manipulateOptions: function (opts, parserOpts, file) {
+      parserOpts.allowReturnOutsideFunction = true;
+    },
+    visitor: visitor,
   };
 };
-// make
+// plugin
