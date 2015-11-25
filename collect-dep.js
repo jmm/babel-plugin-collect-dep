@@ -57,12 +57,19 @@ function plugin () {
       if (! opts.word) opts.word = exports.default_word;
 
       if (! opts.isRequire) opts.isRequire = function (node) {
-        return node.callee.type === "Identifier" && node.callee.name === opts.word;
+        return (
+          node.callee.type === "Identifier" &&
+          node.callee.name === opts.word
+        );
       };
     },
+    // pre
+
     manipulateOptions: function (opts, parserOpts, file) {
       parserOpts.allowReturnOutsideFunction = true;
     },
+    // manipulateOptions
+
     visitor: visitor,
   };
 };
