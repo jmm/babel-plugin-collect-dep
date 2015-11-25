@@ -1,6 +1,8 @@
 {
   "private": true,
+  "author": "Jesse McCarthy (http://software.jessemccarthy.net/)",
+  "license": "MIT",
+  "main": "collect-dep.js",
   "name": "babel-plugin-collect-dep",
-  "version": "0.0.0",
-  "main": "collect-dep.js"
+  "version": "0.0.0"
 }
