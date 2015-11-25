@@ -2,6 +2,9 @@ exports = module.exports = plugin;
 
 exports.default_word = "require";
 
+/**
+ * Returns a fresh, empty dep storage object.
+ */
 exports.default_deps = function (opts) {
   opts = opts || {};
 
