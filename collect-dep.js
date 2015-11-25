@@ -42,7 +42,7 @@ function plugin () {
           opts.dep("strings", args[0].value);
         }
         else {
-          opts.dep("expressions", path.get("arguments.0").getSource())
+          opts.dep("expressions", path.get("arguments.0").getSource());
         }
       }
       if (opts.nodes) opts.dep("nodes", node);
