@@ -15,5 +15,5 @@
     "type": "git",
     "url": "https://github.com/jmm/babel-plugin-collect-dep.git"
   },
-  "version": "0.1.0"
+  "version": "0.1.1"
 }
